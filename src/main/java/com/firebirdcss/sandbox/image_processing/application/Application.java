@@ -1,3 +1,4 @@
+package com.firebirdcss.sandbox.image_processing.application;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
