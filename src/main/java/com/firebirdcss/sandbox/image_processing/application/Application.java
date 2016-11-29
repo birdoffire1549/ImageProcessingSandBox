@@ -48,7 +48,6 @@ public class Application {
 					renderedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 				}
 				
-				
 				for (int w = 0; w < width; w++) {
 					for (int h = 0; h < height; h++) {
 						Color rColor = new Color(bImage.getRGB(w, h));
