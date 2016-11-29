@@ -21,10 +21,11 @@ public class Application {
 	private static final String OUTPUT_FILE_PATH = "/Users/sgriffis/Desktop/out.jpg";
 	private static boolean enablePreview = false;
 	private static boolean enableImageShowThrough = false;
+	private static final int MULT_IPASS_COUNT = 1;
 	
 	private static final int TRACE_COLOR = 6945792; // Decimal value of #00FF00
 	
-	private static final double THRESHOLD_PERCENT = 98.5;
+	private static final double THRESHOLD_PERCENT = 93;
 	
 	/**
 	 * APPLICATION MAIN: The main entry point of the application.
@@ -41,20 +42,28 @@ public class Application {
 			
 			BufferedImage renderedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 			
-			for (int w = 0; w < width; w++) {
-				for (int h = 0; h < height; h++) {
-					Color rColor = new Color(bImage.getRGB(w, h));
-					Color xColor = w + 1 < width ? new Color(bImage.getRGB(w + 1, h)) : new Color(0);
-					Color yColor = h + 1 < height ? new Color(bImage.getRGB(w, h + 1)) : new Color(0);
-					Color zColor = h + 1 < height && w + 1 < width ? new Color(bImage.getRGB(w + 1, h + 1)) : new Color(0);
-					if (outTolerance(rColor, xColor, yColor, zColor)) {
-						renderedImage.setRGB(w, h, TRACE_COLOR);
-					} else {
-						if (enableImageShowThrough) {
-							renderedImage.setRGB(w, h, rColor.getRGB());
+			for (int i = 1; i <= MULT_IPASS_COUNT; i++) {
+				if (i != 1) {
+					bImage = renderedImage;
+					renderedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+				}
+				
+				
+				for (int w = 0; w < width; w++) {
+					for (int h = 0; h < height; h++) {
+						Color rColor = new Color(bImage.getRGB(w, h));
+						Color xColor = w + 1 < width ? new Color(bImage.getRGB(w + 1, h)) : new Color(0);
+						Color yColor = h + 1 < height ? new Color(bImage.getRGB(w, h + 1)) : new Color(0);
+						Color zColor = h + 1 < height && w + 1 < width ? new Color(bImage.getRGB(w + 1, h + 1)) : new Color(0);
+						if (outTolerance(rColor, xColor, yColor, zColor)) {
+							renderedImage.setRGB(w, h, TRACE_COLOR);
+						} else {
+							if (enableImageShowThrough) {
+								renderedImage.setRGB(w, h, rColor.getRGB());
+							}
 						}
+						
 					}
-					
 				}
 			}
 			
@@ -75,6 +84,8 @@ public class Application {
 			System.out.println("OOPS... You broke it: ");
 			e.printStackTrace();
 		}
+		
+		System.out.println("~ Application Ended ~");
 	}
 	
 	/**
